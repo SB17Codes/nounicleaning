@@ -1,0 +1,149 @@
+// The following schema is auto-generated.
+// This file contains FSL for FQL10-compatible schema items.
+
+collection Customers {
+  customerId: String
+  unique [.customerId]
+  firstName: String
+  lastName: String
+  email: String
+  unique [.email]
+  phoneNumber: String?
+  address: String?
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+  
+  index byEmail {
+    terms [.email]
+  }
+
+  index byCustomerId {
+    terms [.customerId]
+  }
+}
+
+
+collection Subscriptions {
+  name: String 
+  unique [.name]
+  details: Array<String>
+  price: Number
+  cleaningFrequency: String
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+
+  index byName {
+    terms [.name]
+  }
+}
+
+
+collection Properties {
+  propertyId: String
+  customer: Ref<Customers>
+  address: String
+  propertyType: String?
+  notes: String?
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+
+  unique [.propertyId]
+
+  index byCustomer {
+    terms [.customer]
+  }
+
+  index byPropertyId {
+    terms [.propertyId]
+  }
+}
+
+
+collection CustomerSubscriptions {
+  customer: Ref<Customers>
+  subscription: Ref<Subscriptions>
+  startDate: Date
+  endDate: Date?
+  isActive: Boolean = true
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+
+  unique [.customer, .subscription]
+
+  index byCustomer {
+    terms [.customer]
+  }
+
+  index bySubscription {
+    terms [.subscription]
+  }
+}
+
+
+collection CleaningSchedules {
+  scheduleId: String
+  property: Ref<Properties>
+  scheduledDate: Date
+  scheduledTime: Time
+  status: "Confirmé" | "Annulé" | "Complété" 
+  notes: String?
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+
+  unique [.scheduleId]
+
+
+migrations {
+  add. scheduledTime
+  backfill .scheduledTime = Time.now()
+}
+
+  index byProperty {
+    terms [.property]
+  }
+
+  index byScheduledId {
+    terms [.scheduleId]
+  }
+}
+
+
+collection Payments {
+  paymentId: String
+  customer: Ref<Customers>
+  amount: Number
+  paymentDate: Date
+  paymentMethod: String
+  notes: String?
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+
+  unique [.paymentId]
+
+  index byCustomer {
+    terms [.customer]
+  }
+
+  index byPaymentDate {
+    terms [.paymentDate]
+  }
+}
+
+
+collection CleaningAssignments {
+  assignmentId: String
+  schedule: Ref<CleaningSchedules>
+  assignedDate: Date
+  notes: String?
+  createdAt: Time = Time.now()
+  updatedAt: Time?
+
+  unique [.assignmentId]
+  unique [.schedule]
+
+  index bySchedule {
+    terms [.schedule]
+  }
+
+}
+

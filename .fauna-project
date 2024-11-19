@@ -1,0 +1,5 @@
+default=dev
+
+[environment.dev]
+endpoint=cloud-eu
+database=NouniDB
