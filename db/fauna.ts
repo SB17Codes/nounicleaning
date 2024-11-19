@@ -1,5 +1,10 @@
+
+
 import { Client, fql, FaunaError } from "fauna";
 import { UserJSON } from "@clerk/nextjs/server";
+
+
+
 
 const faunaClient = new Client({
   secret: "fnAFwWQSn8AAzkTXtPrFOUGdmpPLxqqAdpYTufrT",
